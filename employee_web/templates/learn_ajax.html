@@ -1,0 +1,134 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container">
+        <h1>学习ajax</h1>
+        <h3>案例一：点击按钮，发送Ajax请求</h3>
+        <input type="button" id="btn1" class="btn btn-primary" value="点击1">
+        <hr>
+        <h3>案例二：Ajax请求，将input框内数据提交到后台</h3>
+        <input type="text" id="name" placeholder="姓名">
+        <input type="text" id="age" placeholder="年龄">
+        <input type="button" id="btn2" class="btn btn-primary" value="点击2">
+
+        <hr>
+        <h3>案例三：Ajax请求，多个input框用form</h3>
+        <form id="form">
+            <input type="text" name="name" placeholder="姓名">
+            <input type="text" name="age" placeholder="年龄">
+            <input type="text" name="tel" placeholder="电话">
+            <input type="text" name="more" placeholder="备注">
+        </form>
+        <input type="button" id="btn3" class="btn btn-primary" value="点击3">
+        <h3>案例四：按请求方式分$.get或者$.post</h3>
+        <form id="form-ha">
+            <input type="text" name="name" placeholder="姓名">
+            <input type="text" name="age" placeholder="年龄">
+            <input type="text" name="tel" placeholder="电话">
+            <input type="text" name="more" placeholder="备注">
+        </form>
+        <input type="button" id="btn4" class="btn btn-primary" value="点击4">
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        $(function () {
+            btn1Event();
+            btn2Event();
+            btn3Event();
+            btn4Event();
+        })
+
+        function btn1Event() {
+            $("#btn1").click(function () {
+                $.ajax({
+                    url: "/test/ajax/",
+                    type: "post", {# 或者 type: "get" #}
+                    dataType: "JSON",
+                    data: {
+                        n1: 123,
+                        n2: 456
+                    },
+                    success: function (res) {
+                        console.log(res);
+                        console.log(res.status);
+                    }
+                })
+            })
+        }
+
+        function btn2Event() {
+            $("#btn2").click(function () {
+                $.ajax({
+                    url: "/test/ajax/",
+                    type: "post", {# 或者 type: "get" #}
+                    dataType: "JSON",
+                    data: {
+                        name: $("#name").val(),
+                        age: $("#age").val()
+                    },
+                    success: function (res) {
+                        console.log(res);
+                        console.log(res.status);
+                    }
+                })
+            })
+        }
+
+        function btn3Event() {
+            $("#btn3").click(function () {
+                $.ajax({
+                    url: "/test/ajax/",
+                    type: "post", {# 或者 type: "get" #}
+                    dataType: "JSON",
+                    data: $("#form").serialize(),
+                    success: function (res) {
+                        console.log(res);
+                        console.log(res.status);
+                    }
+                })
+            })
+        }
+
+        function btn4Event() {
+            $("#btn4").click(function () {
+
+                $.post(
+                    "/test/ajax/",//请求的地址
+                    $("#form-ha").serialize(),//请求传给web服务器的参数
+                    function (res) { //请求成功的回调函数
+                        console.log(res);
+                        console.log(res.status);
+                    },
+                    "JSON",// 返回数据的解析方式
+                ).fail(function () { //错误异常处理，失败执行的回调函数
+                    alert("网络异常");
+                })
+
+            })
+        }
+
+    </script>
+{% endblock %}
+
+{##}
+{#    // 1.url 请求地址#}
+{#    url:'http://t.weather.sojson.com/api/weather/city/101010100',#}
+{#    // 2.type 请求方式，默认是'GET'，常用的还有'POST'#}
+{#    type:'GET',                         #}
+{#    // 3.dataType 设置返回的数据格式，常用的是'json'格式#}
+{#    dataType:'JSON',                    #}
+{#    // 4.data 设置发送给服务器的数据, 没有参数不需要设置#}
+{#    data:                               #}
+{#    // 5.success 设置请求成功后的回调函数#}
+{#    success:function (response) {       #}
+{#        console.log(response);          #}
+{#    },                                  #}
+{#    // 6.error 设置请求失败后的回调函数#}
+{#    error:function () {                 #}
+{#        alert("请求失败,请稍后再试!");     #}
+{#    },                                  #}
+{#    // 7.async 设置是否异步，默认值是'true'，表示异步，一般不用写#}
+{#    async:true                          #}
